@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drawing App</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="drawingCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('drawingCanvas');
+        const context = canvas.getContext('2d');
+        let drawing = false;
+        let firstTouch = true;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        canvas.addEventListener('touchstart', (event) => {
+            if (firstTouch) {
+                drawing = true;
+                context.beginPath();
+                context.moveTo(event.touches[0].clientX, event.touches[0].clientY);
+            } else {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        });
+
+        canvas.addEventListener('touchmove', (event) => {
+            if (drawing) {
+                context.lineTo(event.touches[0].clientX, event.touches[0].clientY);
+                context.strokeStyle = 'red';
+                context.lineWidth = 15; // Толщина кисти увеличена в три раза
+                context.stroke();
+            }
+        });
+
+        canvas.addEventListener('touchend', () => {
+            drawing = false;
+            firstTouch = !firstTouch; // Переключение состояния первого прикосновения
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
